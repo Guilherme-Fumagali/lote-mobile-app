@@ -8,18 +8,27 @@ import {
     RefreshControl,
     StyleSheet, Platform, TextInput, Image
 } from 'react-native';
-import logo from '../../assets/agro-mark-logo.png';
 import { getAllLotes, deleteLote } from '../api/api';
 import { Lote } from '../types/Lote';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons'; // se estiver usando Expo
-
+import { Ionicons } from '@expo/vector-icons';
+import {Camera, CameraView} from "expo-camera";
 export default function HomeScreen() {
     const [lotesOriginais, setLotesOriginais] = useState<Lote[]>([]);
     const [lotesFiltrados, setLotesFiltrados] = useState<Lote[]>([]);
     const [busca, setBusca] = useState('');
     const [refreshing, setRefreshing] = useState(false);
+    const [showScanner, setShowScanner] = useState(false);
+    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const navigation = useNavigation();
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
+    }, []);
+
     const fetchLotes = async () => {
         setRefreshing(true);
         try {
@@ -56,6 +65,11 @@ export default function HomeScreen() {
                 },
             },
         ]);
+    }
+
+    const handleBarCodeScanned = ({ data }: { data: string }) => {
+        setShowScanner(false);
+        filtrarLotes(data); // filtra automaticamente
     };
 
     useFocusEffect(
@@ -63,7 +77,6 @@ export default function HomeScreen() {
             fetchLotes();
         }, [])
     );
-
 
     return (
         <View style={styles.container}>
@@ -75,12 +88,26 @@ export default function HomeScreen() {
                 <Text style={styles.novoButtonText}>Novo Lote</Text>
             </TouchableOpacity>
 
-            <TextInput
-                placeholder="Buscar por código..."
-                value={busca}
-                onChangeText={filtrarLotes}
-                style={styles.inputBusca}
-            />
+            <View style={styles.buscaContainer}>
+                <TextInput
+                    placeholder="Buscar por código..."
+                    value={busca}
+                    onChangeText={filtrarLotes}
+                    style={styles.inputBusca}
+                />
+                <TouchableOpacity onPress={() => setShowScanner(!showScanner)} style={styles.scanButton}>
++                    <Ionicons name="barcode-outline" size={24} color="#333" />
+                </TouchableOpacity>
+            </View>
+
+
+            {/* Scanner de código de barras */}
+            {showScanner && hasPermission && (
+                <CameraView
+                    onBarcodeScanned={handleBarCodeScanned}
+                    style={{ flex: 1 }}
+                />
+            )}
 
             <FlatList
                 data={lotesFiltrados}
@@ -93,7 +120,9 @@ export default function HomeScreen() {
                     <View style={styles.card}>
                         <View style={{ flex: 1 }}>
                             <Text style={styles.nome}>{item.nome}</Text>
-                            <Text style={styles.texto}>Validade: {new Date(item.validade).toLocaleDateString('pt-BR')}</Text>
+                            <Text style={styles.texto}>
+                                Validade: {new Date(item.validade).toLocaleDateString('pt-BR')}
+                            </Text>
                             <View style={styles.codigoContainer}>
                                 <Text style={styles.codigoLabel}>Código:</Text>
                                 <Text style={styles.codigoValor}>{item.codigo}</Text>
@@ -162,7 +191,7 @@ const styles = StyleSheet.create({
 
     codigoValor: {
         fontSize: 16,
-        fontFamily: Platform.select({ ios: 'Courier', android: 'monospace' }),
+        fontFamily: Platform.select({ios: 'Courier', android: 'monospace'}),
         backgroundColor: '#e0f0ff',
         paddingHorizontal: 8,
         paddingVertical: 4,
@@ -170,13 +199,28 @@ const styles = StyleSheet.create({
         color: '#003366',
         fontWeight: 'bold',
     },
-    inputBusca: {
-        backgroundColor: '#f0f0f0',
-        padding: 10,
-        borderRadius: 8,
+    buscaContainer: {
+        flexDirection: 'row',
+        alignItems: 'center', // Alinha verticalmente
         marginBottom: 12,
+    },
+    inputBusca: {
+        flex: 1, // Ocupa o espaço restante
+        backgroundColor: '#f0f0f0',
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        borderRadius: 8,
         fontSize: 16,
         borderWidth: 1,
         borderColor: '#ccc',
+    },
+    scanButton: {
+        width: 48,
+        height: 48, // Igual altura do input (aproximadamente)
+        marginLeft: 8,
+        backgroundColor: '#e0e0e0',
+        borderRadius: 8,
+        justifyContent: 'center', // Alinha verticalmente o ícone
+        alignItems: 'center',     // Alinha horizontalmente o ícone
     },
 });
