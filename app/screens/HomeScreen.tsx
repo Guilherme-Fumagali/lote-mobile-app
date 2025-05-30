@@ -93,7 +93,7 @@ export default function HomeScreen() {
                     <View style={styles.card}>
                         <View style={{ flex: 1 }}>
                             <Text style={styles.nome}>{item.nome}</Text>
-                            <Text style={styles.texto}>Validade: {item.validade}</Text>
+                            <Text style={styles.texto}>Validade: {new Date(item.validade).toLocaleDateString('pt-BR')}</Text>
                             <View style={styles.codigoContainer}>
                                 <Text style={styles.codigoLabel}>Código:</Text>
                                 <Text style={styles.codigoValor}>{item.codigo}</Text>

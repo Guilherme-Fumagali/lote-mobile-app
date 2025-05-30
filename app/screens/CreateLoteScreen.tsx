@@ -47,6 +47,7 @@ export default function CreateLoteScreen() {
             <Button title={validade.toDateString()} onPress={() => setShowPicker(true)} />
             {showPicker && (
                 <DateTimePicker
+                    locale="pt-BR"
                     value={validade}
                     mode="date"
                     display="default"
