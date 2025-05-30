@@ -38,6 +38,7 @@ export default function CreateLoteScreen() {
                     marginBottom: 16,
                     borderRadius: 6,
                 }}
+                placeholderTextColor="#666"
                 value={nome}
                 onChangeText={setNome}
                 placeholder="Ex: Lote 123"

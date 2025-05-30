@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-    baseURL: 'http:///192.168.31.92:8080',
+    baseURL: 'http://192.168.31.2:6933',
 });
 
 export const getAllLotes = async () => {

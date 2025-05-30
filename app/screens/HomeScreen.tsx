@@ -6,7 +6,7 @@ import {
     Alert,
     TouchableOpacity,
     RefreshControl,
-    StyleSheet, Platform, TextInput, Image
+    StyleSheet, Platform, TextInput
 } from 'react-native';
 import { getAllLotes, deleteLote } from '../api/api';
 import { Lote } from '../types/Lote';
@@ -94,6 +94,7 @@ export default function HomeScreen() {
                     value={busca}
                     onChangeText={filtrarLotes}
                     style={styles.inputBusca}
+                    placeholderTextColor="#666"
                 />
                 <TouchableOpacity onPress={() => setShowScanner(!showScanner)} style={styles.scanButton}>
 +                    <Ionicons name="barcode-outline" size={24} color="#333" />
