@@ -13,6 +13,7 @@ import { Lote } from '../types/Lote';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {Camera, CameraView} from "expo-camera";
+
 export default function HomeScreen() {
     const [lotesOriginais, setLotesOriginais] = useState<Lote[]>([]);
     const [lotesFiltrados, setLotesFiltrados] = useState<Lote[]>([]);
@@ -97,7 +98,7 @@ export default function HomeScreen() {
                     placeholderTextColor="#666"
                 />
                 <TouchableOpacity onPress={() => setShowScanner(!showScanner)} style={styles.scanButton}>
-+                    <Ionicons name="barcode-outline" size={24} color="#333" />
+                    <Ionicons name="barcode-outline" size={24} color="#333" />
                 </TouchableOpacity>
             </View>
 
