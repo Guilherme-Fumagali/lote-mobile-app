@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "lote-mobile-app",
+    "name": "Gerenciador de Lotes - Agro Mark",
     "slug": "lote-mobile-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-agro-mark.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/agro-mark-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0fca21"
     },
     "ios": {
       "supportsTablet": true
